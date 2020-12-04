@@ -1,32 +1,47 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <van-tabbar v-model="active" v-show="menu">
+        <van-tabbar-item icon="home-o" to="/home">场馆</van-tabbar-item>
+        <van-tabbar-item icon="coupon-o" to="/activity">活动</van-tabbar-item>
+        <van-tabbar-item icon="search" to="/find">发现</van-tabbar-item>
+        <van-tabbar-item icon="contact" to="/mine">我的</van-tabbar-item>
+      </van-tabbar>
     </div>
-    <router-view/>
+    <!-- 组件缓存 -->
+    <!-- <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view> -->
+    <keep-alive :include="cached">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+export default {
+  data(){
+    return{
+      active:0,
+      cached: this.$store.state.catchArr
     }
-  }
+  },
+  computed:{
+    //判断下面菜单是否在当前页面显示
+    menu(){
+      let whiteList = ['Home', 'Activity', 'Find', 'Mine']
+      let bool = whiteList.includes(this.$route.name)
+      // console.log(bool)
+      return bool
+    }
+  },
 }
+</script>
+<style lang="less">
+dl,dt,dd,body,html,ul,li{
+  margin: 0;
+  padding: 0;
+}
+
 </style>
